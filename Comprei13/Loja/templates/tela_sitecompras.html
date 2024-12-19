@@ -1,0 +1,408 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Lista de Compras</title>
+    <link rel="stylesheet" href="{% static 'produtos/css/estilo_sitecompras.css' %}">
+    <script defer>
+        function carregarConteudo(secao) {
+            const conteudos = document.querySelectorAll('.conteudo');
+            conteudos.forEach((conteudo) => {
+                conteudo.style.display = 'none';
+            });
+            document.getElementById(secao).style.display = 'block';
+        }
+        
+        function toggleItens(listaId) {
+            const itensContainer = document.getElementById(`itens-lista-${listaId}`);
+            const toggleBtn = document.getElementById(`toggle-btn-${listaId}`);
+
+            if (itensContainer.style.display === 'none' || itensContainer.style.display === '') {
+                itensContainer.style.display = 'block';
+                toggleBtn.textContent = '-'; // Alterar o botão para "-"
+            
+                if (!itensContainer.hasAttribute('data-loaded')) {
+                    fetch(`/get_itens_lista/${listaId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                itensContainer.innerHTML = '';
+                                data.itens.forEach(item => {
+                                    itensContainer.innerHTML += `
+                                        <div class="item" id="produto-${item.id}">
+                                            <span class="produto-nome" onclick="marcarProduto(${listaId}, ${item.id})">
+                                                ${item.name} - Quantidade: ${item.quantity} - Preço: R$${item.price}
+                                                <strong id="status-${item.id}" style="color: ${item.purchased ? 'green' : 'red'};">
+                                                    ${item.purchased ? 'Comprado' : 'Pendente'}
+                                                </strong>
+                                            </span>
+                                        </div>
+                                    `;
+                                });
+                                itensContainer.setAttribute('data-loaded', 'true');
+                            } else {
+                                itensContainer.innerHTML = '<p>Erro ao carregar os produtos.</p>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao buscar os produtos:', error);
+                            itensContainer.innerHTML = '<p>Erro ao buscar os produtos.</p>';
+                        });
+                }
+            } else {
+                itensContainer.style.display = 'none';
+                toggleBtn.textContent = '+'; // Alterar o botão para "+"
+            }
+        }
+
+
+        function marcarProduto(listaId, produtoId) {
+            fetch(`/marcar_produto_como_comprado/${listaId}/${produtoId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const statusElement = document.getElementById(`status-${produtoId}`);
+                    statusElement.textContent = data.purchased ? 'Comprado' : 'Pendente';
+                    statusElement.style.color = data.purchased ? 'green' : 'red';
+                } else {
+                    alert('Erro ao marcar o produto como comprado.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao marcar o produto:', error);
+            });
+        }
+
+        function buscarProdutos() {
+            const query = document.getElementById('busca_produto').value;
+            fetch(`/buscar_produtos/?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultados = document.getElementById('resultados_busca');
+                    resultados.innerHTML = ''; // Limpa os resultados anteriores
+                    data.produtos.forEach(produto => {
+                        const div = document.createElement('div');
+                        div.classList.add('produto-item');
+                        div.innerHTML = `
+                            <strong>${produto.name}</strong> - ${produto.description}
+                            <label for="shopping_list_select_${produto.id}">Selecione a lista:</label>
+                            <select id="shopping_list_select_${produto.id}">
+                                {% for shopping_list in shopping_lists %}
+                                    <option value="{{ shopping_list.id }}">{{ shopping_list.name }}</option>
+                                {% empty %}
+                                    <option value="">Nenhuma lista disponível</option>
+                                {% endfor %}
+                            </select>
+
+                            <label for="quantity_${produto.id}">Quantidade:</label>
+                            <input type="number" id="quantity_${produto.id}" min="1" value="1">
+
+                            <button onclick="adicionarProduto(${produto.id})">Adicionar</button>
+                        `;
+                        resultados.appendChild(div);
+                    });
+                });
+        }
+
+        function adicionarProduto(produtoId) {
+            const listaId = document.getElementById(`shopping_list_select_${produtoId}`).value;
+            const quantidade = document.getElementById(`quantity_${produtoId}`).value;
+
+            if (!listaId) {
+                alert('Selecione uma lista de compras.');
+                return;
+            }
+
+            if (!quantidade || quantidade <= 0) {
+                alert('Informe uma quantidade válida.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('produto_id', produtoId);
+            formData.append('lista_id', listaId);
+            formData.append('quantity', quantidade);
+
+            fetch('/adicionar_produto/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert('Não foi possível adicionar o produto.');
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+
+
+        function adicionarItemNaListaDOM(item, listaId) {
+            // Encontre a lista de compras correta no DOM usando o data-lista-id
+            const listaElement = document.querySelector(`li[data-lista-id='${listaId}'] ul`);
+            
+            if (listaElement) {
+                const itemElement = document.createElement('li');
+                itemElement.id = `item-${item.id}`;
+                itemElement.innerHTML = `
+                    ${item.name} - 
+                    ${item.purchased ? '<span>Comprado</span>' : '<span>Pendente</span>'}
+                    <button onclick="excluirItem('${item.id}')">Excluir</button>
+                `;
+                listaElement.appendChild(itemElement);
+            } else {
+                console.error(`Não foi possível encontrar a lista de compras com o ID: ${listaId}`);
+            }
+        }
+
+        function criarNovaLista() {
+            const nomeLista = prompt("Digite o nome da nova lista de compras:");
+            console.log(nomeLista);
+            console.log(nomeLista);
+            if (nomeLista) {
+                const formData = new FormData();
+                formData.append('nome', nomeLista);
+
+                fetch('/criar_lista_compras', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                });
+            }
+        }
+        function excluirItem(itemId) {
+            const confirmacao = confirm("Tem certeza que deseja excluir este item?");
+            if (confirmacao) {
+                fetch(`/excluir_item/${itemId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Item excluído com sucesso!');
+                        const itemElement = document.getElementById(`item-${itemId}`);
+                        if (itemElement) {
+                            itemElement.remove(); // Remove o item do DOM
+                        }
+                    } else {
+                        alert('Não foi possível excluir o item.');
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            }
+        }
+
+        // scripts da parte da receita:
+
+        function adicionarIngredientes(receitaId, listaId) {
+            fetch(`/adicionar_ingredientes_lista/${receitaId}/${listaId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => console.error('Erro ao adicionar ingredientes:', error));
+        }
+
+        function expandirFormularioReceita() {
+            const formulario = document.getElementById('formulario-adicionar-receita');
+            formulario.style.display = 'block'; // Exibe o formulário
+        }
+
+        function retrairFormularioReceita() {
+            const formulario = document.getElementById('formulario-adicionar-receita');
+            formulario.style.display = 'none'; // Esconde o formulário
+        }
+
+        function adicionarIngrediente() {
+            const container = document.getElementById('ingredientes-container');
+            const novoIngrediente = document.createElement('div');
+            novoIngrediente.innerHTML = `
+                <input type="text" name="ingredient_name[]" placeholder="Nome do Ingrediente" required>
+                <input type="text" name="ingredient_quantity[]" placeholder="Quantidade (Ex: 2 xícaras)" required>
+            `;
+            container.appendChild(novoIngrediente);
+        }
+
+        document.getElementById('form-adicionar-receita').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio tradicional do formulário
+
+            const formData = new FormData(this);
+
+            fetch('/adicionar_receita/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Receita adicionada com sucesso!');
+                    retrairFormularioReceita(); // Retrai o formulário
+                    atualizarListaReceitas(data.receita); // Atualiza a lista de receitas
+                } else {
+                    alert('Erro ao adicionar a receita.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        });
+
+        function atualizarListaReceitas(receita) {
+            const lista = document.getElementById('lista-receitas');
+            const novoItem = document.createElement('li');
+            novoItem.textContent = receita.name;
+            lista.appendChild(novoItem);
+        }
+
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Barra Lateral -->
+        <aside class="sidebar">
+            <ul>
+                <li><a href="#" onclick="carregarConteudo('busca-de-produtos')">Buscar Produtos</a></li>
+                <li><a href="#" onclick="carregarConteudo('lista-de-compras')">Lista de Compras</a></li>
+                <li><a href="#" onclick="carregarConteudo('receitas')">Receitas</a></li>
+                <li><a href="#" onclick="carregarConteudo('historico')">Histórico</a></li>
+                <li><a href="#" onclick="carregarConteudo('minha-conta')">Minha Conta</a></li>
+            </ul>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Seção de busca de produtos -->
+            <section id="busca-de-produtos" class="conteudo" style="display: block;">
+                <h1>Buscar Produtos</h1>
+                <input type="text" id="busca_produto" placeholder="Pesquise o produto..." required>
+                <button onclick="buscarProdutos()">Pesquisar</button>
+                <h2>Produtos Encontrados</h2>
+                <div id="resultados_busca"></div>
+            </section>
+
+            <!-- Lista de Compras -->
+            <section id="lista-de-compras" class="conteudo" style="display: block;">
+                <h1>Minhas Listas de Compras</h1>
+                <button onclick="criarNovaLista()">Criar Nova Lista de Compras</button>
+                <ul>
+                    {% for shopping_list in shopping_lists %}
+                    <li class="lista-compras">
+                        <button id="toggle-btn-{{ shopping_list.id }}" onclick="toggleItens('{{ shopping_list.id }}')">+</button>
+                        <strong>{{ shopping_list.name }}</strong> - {{ shopping_list.description }}
+                        <div id="itens-lista-{{ shopping_list.id }}" class="itens-da-lista">
+                            {% for item in shopping_list.items.all %}
+                                <div class="item" id="produto-{{ item.id }}">
+                                    <span class="produto-nome" onclick="marcarProduto('{{ shopping_list.id }}, {{ item.id }}')">
+                                        {{ item.name }} - 
+                                        {% if item.purchased %}
+                                            <span style="color: green;">Comprado</span>
+                                        {% else %}
+                                            <span style="color: red;">Pendente</span>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            {% empty %}
+                                <p>Nenhum item nesta lista</p>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    
+                    {% empty %}
+                        <p>Você ainda não criou nenhuma lista de compras.</p>
+                    {% endfor %}
+                </ul>                
+            </section>
+
+            <!-- Outras Seções -->
+            <!-- Receitas -->
+            <section id="receitas" class="conteudo" style="display: none;">
+                <h1>Receitas</h1>
+                <button id="btn-adicionar-receita" onclick="expandirFormularioReceita()">Adicionar Receita</button>
+            
+                <div id="formulario-adicionar-receita" style="display: none;">
+                    <h2>Adicionar Nova Receita</h2>
+            
+                    <form id="form-adicionar-receita">
+                        {% csrf_token %}
+                        
+                        <label for="name">Nome da Receita:</label>
+                        <input type="text" id="name" name="name" required><br><br>
+            
+                        <label for="preparation">Modo de Preparo:</label><br>
+                        <textarea id="preparation" name="preparation" required></textarea><br><br>
+            
+                        <h3>Ingredientes</h3>
+                        <div id="ingredientes-container">
+                            <div>
+                                <input type="text" name="ingredient_name[]" placeholder="Nome do Ingrediente" required>
+                                <input type="text" name="ingredient_quantity[]" placeholder="Quantidade (Ex: 2 xícaras)" required>
+                            </div>
+                        </div>
+            
+                        <button type="button" onclick="adicionarIngrediente()">Adicionar Ingrediente</button><br><br>
+            
+                        <button type="submit">Salvar Receita</button>
+                    </form>
+                </div>
+            
+                <h3>Lista de Receitas</h3>
+                <ul id="lista-receitas">
+                    {% for receita in receitas %}
+                        <li>{{ receita.name }}</li>
+                    {% empty %}
+                        <li>Nenhuma receita cadastrada</li>
+                    {% endfor %}
+                </ul>
+            </section>
+            
+
+            <!-- Histórico -->
+            <section id="historico" class="conteudo" style="display: none;">
+                <h1>Histórico de Compras</h1>
+            </section>
+
+            <!-- Minha Conta -->
+            <section id="minha-conta" class="conteudo" style="display: none;">
+                <h1>Minha Conta</h1>
+                <ul>
+                    <li>Nome: {{ user_name }}</li>
+                    <li>Email: {{ user_email }}</li>
+                </ul>
+                <a href="{% url 'login' %}" class="button">Sair</a>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

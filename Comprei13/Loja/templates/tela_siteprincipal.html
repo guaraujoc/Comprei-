@@ -1,0 +1,113 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprei - Loja Virtual</title>
+    <link rel="stylesheet" href="{%static 'produtos/css/estilo_siteprincipal.css'%}">
+</head>
+<body>
+
+    <!-- Cabeçalho / Menu de navegação -->
+    <header>
+        <div class="logo">
+            <h1>Comprei</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Início</a></li>
+                <li><a href="#produtos">Produtos</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Seção de Banner -->
+    <section class="banner">
+        <h2>Bem-vindo ao Comprei!</h2>
+        <p>Os melhores produtos, as melhores ofertas, sempre para você!</p>
+    </section>
+
+    <!-- Seção de Produtos -->
+    <section id="produtos" class="produtos-container">
+        <h2>Nossos Produtos</h2>
+
+        <div class="grid-produtos">
+            <!-- Produto 1 -->
+            <div class="produto">
+                <img src="images/produto1.jpg" alt="Produto 1">
+                <h3>Produto 1</h3>
+                <p class="descricao">Descrição breve do produto.</p>
+                <p class="preco">R$ 59,99</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
+
+            <!-- Produto 2 -->
+            <div class="produto">
+                <img src="images/produto2.jpg" alt="Produto 2">
+                <h3>Produto 2</h3>
+                <p class="descricao">Descrição breve do produto.</p>
+                <p class="preco">R$ 89,99</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
+
+            <!-- Produto 3 -->
+            <div class="produto">
+                <img src="images/produto3.jpg" alt="Produto 3">
+                <h3>Produto 3</h3>
+                <p class="descricao">Descrição breve do produto.</p>
+                <p class="preco">R$ 29,99</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
+
+            <!-- Produto 4 -->
+            <div class="produto">
+                <img src="images/produto4.jpg" alt="Produto 4">
+                <h3>Produto 4</h3>
+                <p class="descricao">Descrição breve do produto.</p>
+                <p class="preco">R$ 119,99</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
+
+            <!-- Produto 5 -->
+            <div class="produto">
+                <img src="images/produto5.jpg" alt="Produto 5">
+                <h3>Produto 5</h3>
+                <p class="descricao">Descrição breve do produto.</p>
+                <p class="preco">R$ 49,99</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
+
+            <!-- Produto 6 -->
+            <div class="produto">
+                <img src="images/produto6.jpg" alt="Produto 6">
+                <h3>Produto 6</h3>
+                <p class="descricao">Descrição breve do produto.</p>
+                <p class="preco">R$ 79,99</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Sobre -->
+    <section id="sobre" class="sobre">
+        <h2>Sobre Nós</h2>
+        <p>Somos uma loja online que oferece produtos de alta qualidade com preços acessíveis. Nossa missão é proporcionar uma experiência de compra prática, segura e eficiente.</p>
+    </section>
+
+    <!-- Seção de Contato -->
+    <section id="contato" class="contato">
+        <h2>Fale Conosco</h2>
+        <p>Entre em contato conosco pelo e-mail: <a href="mailto:contato@comprei.com">contato@comprei.com</a></p>
+    </section>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2024 Comprei. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>

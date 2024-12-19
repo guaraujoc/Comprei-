@@ -1,0 +1,39 @@
+{% load static %}
+
+<!-- <!DOCTYPE html>
+<html lang="pt-BR"> -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Comprei</title>
+    <link rel="stylesheet" href="{% static 'produtos/css/estilo_login.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="logo">Comprei</h1>
+        <p class="welcome-message">Bem-vindo! Faça login para acessar sua conta.</p>
+        
+        <form action="{% url 'login' %}" method="POST" class="login-form">
+            {% csrf_token %}
+            
+            <div class="input-group">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+            </div>
+            
+            
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            </div>
+
+            <input type="submit" value="Entrar" class="btn-login">
+
+            <p class="register-message">Não tem uma conta? <a href="{% url 'cadastro' %}">Registre-se aqui</a></p>
+
+            <p class="register-message">Esqueceu sua senha? <a href="{% url 'esqueci_senha' %}">Recupere aqui</a></p>
+
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>App Comprei!.html</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <link rel="stylesheet" href="{%static 'produtos/css/estilo.css'%}">
+    </head>
+    <body>
+      <header class="flex-container">
+          <img class="image is-128x128 ml-5" src="{%static 'produtos/img/carrinho.png'%}" alt=”logo”>
+          <div class="flex-container">
+          <script>
+    		function Opções1() {
+        		alert('Opções1')
+    		}
+    		function Opções2() {
+        		alert('Opções2')
+    		}
+    		function Opções3() {
+        		alert('Opções3')
+    		}
+    		</script>
+        <form action=" " method="">
+          <input type="text" name="nome" placeholder="Digite seu nome">
+          <br>
+          <input type="number" name="idade" placeholder="Digite sua idade">
+          <br>
+          <br>
+          <input type="submit" value="Enviar">
+        </form>
+              <div class="opcoes flex-container">
+                  <button onclick="Opções1()">Opções1 </button>
+                  <button onclick="Opções2()">Opções2 </button>
+                  <button onclick="Opções3()">Opções3 </button>                 
+              </div>
+              <img class="image is-48x48 perfil mx-5" src="{%static 'produtos/img/perfil.png'%}" alt=”Imagem de Perfil”>
+          </div>
+      </header>
+      <script>
+    	function login() {
+        	alert('Login')
+    	}
+    	
+      </script>
+      <div class="container ml-6 flex-container">
+        <div>
+          <h1 class="title texto">
+            Aplicativo Comprei! 
+          </h1>
+          <p class="subtitle is-2 mt-4 mb-4 texto">
+            Seja bem vindo ao aplicativo Comprei desenvolvido pela USP São Carlos
+          </p>
+          <p class="subtitle is-2 mt-4 mb-4 texto">
+              	Esse site conta com a aplicação de adicionar compras, salvar receitas e muito mais para facilitar o dia a dia do usuário!
+          </p>
+          
+          <button class="button is-danger" onclick="login()">Login!</button>
+        </div>
+        <img class="neps-image" src="{%static 'produtos/img/neps.png'%}" alt="Descrição da Imagem" />
+      </div>
+    </body>
+    <div>
+    	<h5>
+    	<p>Criado em 8/12/2024 Direitos reservados pela USP</p>
+    	</h5>
+    </div>
+</html>
+

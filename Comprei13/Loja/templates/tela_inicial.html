@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Comprei!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="{% static 'produtos/css/estilo_tela_inicial.css' %}">
+</head>
+<body>
+    <!-- Cabeçalho com o logotipo -->
+    <header class="header">
+        <img class="logo" src="{% static 'produtos/img/carrinho.png' %}" alt="Logo do Comprei">
+        <h1 class="title">Bem-vindo ao Comprei!</h1>
+    </header>
+
+    <!-- Seção de introdução -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Organize suas compras de forma simples e eficiente</h2>
+            <p>
+                O Comprei é um aplicativo desenvolvido pela USP São Carlos que permite criar listas de compras, salvar receitas e gerenciar seu inventário pessoal de forma prática e rápida.
+            </p>
+            <!-- Botão de login -->
+            <a href="{% url 'login' %}" class="button is-primary">Fazer Login</a>
+        </div>
+
+        <!-- Imagem decorativa -->
+        <img class="hero-image" src="{% static 'produtos/img/introducao.png' %}" alt="Ilustração do aplicativo">
+    </section>
+
+    <!-- Seção de recursos -->
+    <section class="features">
+        <h2 class="section-title">Funcionalidades</h2>
+        <div class="feature-list">
+            <div class="feature">
+                <img src="{% static 'produtos/img/lista_de_compras.png' %}" alt="Lista de Compras">
+                <h3>Lista de Compras</h3>
+                <p>Crie e gerencie listas de compras personalizadas para suas necessidades diárias.</p>
+            </div>
+
+            <div class="feature">
+                <img src="{% static 'produtos/img/receitas.png' %}" alt="Receitas">
+                <h3>Receitas</h3>
+                <p>Armazene e visualize suas receitas favoritas para facilitar suas compras.</p>
+            </div>
+
+            <div class="feature">
+                <img src="{% static 'produtos/img/inventario.png' %}" alt="Inventário">
+                <h3>Inventário</h3>
+                <p>Gerencie o estoque de alimentos e produtos que você já possui em casa.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2024 - Comprei. Direitos reservados pela USP São Carlos.</p>
+    </footer>
+</body>
+</html>

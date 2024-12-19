@@ -1,0 +1,175 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container principal */
+.container {
+    display: flex;
+    width: 90%;
+    max-width: 1200px;
+    height: 90vh;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Barra Lateral */
+.sidebar {
+    width: 250px;
+    background-color: #007BFF;
+    color: white;
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    display: block;
+    transition: background-color 0.3s;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #0056b3;
+}
+
+/* Conteúdo Principal */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.main-content h1 {
+    font-size: 2rem;
+    color: #007BFF;
+    margin-bottom: 20px;
+}
+
+.conteudo {
+    margin-bottom: 20px;
+}
+
+.conteudo ul {
+    list-style: none;
+    padding: 0;
+}
+
+.conteudo ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.lista-compras {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.lista-compras:hover {
+    background-color: #f1f1f1;
+}
+
+.itens-da-lista {
+    display: none; /* Os itens estão inicialmente escondidos */
+    padding: 10px 20px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ccc;
+}
+
+button#toggle-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+button#toggle-btn:hover {
+    background-color: #0056b3;
+}
+
+.lista-compras {
+    display: flex;
+    align-items: center;
+}
+
+.lista-compras strong {
+    margin-left: 10px;
+}
+
+a.botao-adicionar {
+    display: inline-block;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.botao-adicionar:hover {
+    background-color: #218838;
+}
+
+a.botao-excluir {
+    display: inline-block;
+    background-color: #FF4136;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.botao-excluir:hover {
+    background-color: #FF6347;
+}

@@ -1,0 +1,32 @@
+html {
+  background-color: #0b1621;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.opcoes {
+  width: 240px;
+}
+
+h4 {
+  color: #949494;
+  font-weight: bold;
+}
+
+.perfil {
+  border-radius: 50%;
+}
+
+.title {
+  font-size: 80px;
+}
+
+.texto {
+  color: #FAFAFA;
+  max-width: 720px;
+}
+
